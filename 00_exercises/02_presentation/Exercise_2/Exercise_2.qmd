@@ -1,0 +1,246 @@
+---
+format: 
+  revealjs:
+    theme: simple
+    logo: www/namelogo.png
+    css: styles.css
+server: shiny
+bibliography: refs.bib
+link-citations: true
+---
+
+# Casio wrist camera
+
+:::::: columns
+::: column
+![](www/Casiowqv.png){fig-align="left"}
+:::
+
+:::: column
+::: {style="font-size: 24px; line-height: 1.6;"}
+<br><br>
+
+-   **World’s first wristwatch** <br> **equipped** **with a digital camera**
+-   Released in the year 2000
+-   Built-in 1MB memory (100 images)\
+-   Resolution: 120 x 120 Pixels\
+-   Data transfer through Infrared\
+-   F2.8 fixed; f = 1.1mm lens\
+-   1/14 inch monochrome CMOS sensor\
+:::
+::::
+::::::
+
+## The second version (2001) came in different colors {style="font-size: 26px;"}
+
+<br>
+
+```{r}
+library(shiny)
+
+div(align = "center", imageOutput("img_display", width = "500px"),
+  tags$div(class = "color-buttons",
+    actionButton("show_black",  " "),
+    actionButton("show_silver", " "),
+    actionButton("show_blue",   " "),
+    actionButton("show_yellow", " "),
+    actionButton("show_full_yellow", " ")
+  ))
+
+```
+
+```{r, context="server"}
+
+current_image <- reactiveVal("www/black.png")
+
+observeEvent(input$show_black,  current_image("www/black.png"))
+observeEvent(input$show_silver, current_image("www/bsilver.png"))
+observeEvent(input$show_blue,   current_image("www/blue.png"))
+observeEvent(input$show_yellow, current_image("www/byellow.png"))
+observeEvent(input$show_full_yellow, current_image("www/byellow2.png"))
+
+output$img_display <- renderImage({
+  list(src = current_image(), contentType = "image/png")
+}, deleteFile = FALSE)
+```
+
+```{=html}
+<style>
+.color-buttons .btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  margin: 10px;
+  padding: 0;
+}
+
+/* colors */
+#show_black        { background-color: black; }
+#show_silver       { background-color: silver; }
+#show_blue         { background-color: skyblue; }
+#show_yellow       { background-color: yellow; }
+#show_full_yellow  { background-color: gold; }
+</style>
+```
+
+## Image resolution {style="font-size: 26px;"}
+
+<br>
+
+```{r}
+library(shiny)
+library(DT)
+
+div(style="display:flex; gap:10px; justify-content:left; font-size: 20px;",
+  numericInput("px_w", "Pixel width", 120, min = 1, step = 1),
+  numericInput("px_h", "Pixel height", 120,  min = 1, step = 1),
+  numericInput("diag_cm", "Diagonal (cm)", 2.8, min = 0.01, step = 0.1)
+)
+
+DTOutput("stats")
+```
+
+```{r, context = "server"}
+
+library(tidyverse)
+
+# gcd helper for aspect ratio
+gcd <- function(a, b) if (b == 0) abs(a) else Recall(b, a %% b)
+
+output$stats <- DT::renderDT({
+  w <- as.integer(input$px_w %||% 0)
+  h <- as.integer(input$px_h %||% 0)
+  d_cm <- as.numeric(input$diag_cm %||% NA_real_)
+
+  total_px <- as.double(w) * as.double(h)
+  mp <- total_px / 1e6
+  diag_px <- sqrt(as.double(w)^2 + as.double(h)^2)
+
+  d_in <- if (!is.na(d_cm) && d_cm > 0) d_cm / 2.54 else NA_real_
+  dpi  <- if (!is.na(d_in) && d_in > 0) diag_px / d_in else NA_real_
+
+  if (w > 0 && h > 0) {
+    g <- gcd(w, h)
+    ar_str <- sprintf("%d:%d", w/g, h/g)
+  } else {
+    ar_str <- NA_character_
+  }
+
+  df <- data.frame(
+    Metric = c(
+      "Pixel width", "Pixel height", "Diagonal (cm)", "Diagonal (inch)",
+      "DPI (diagonal)", "Megapixels", "Aspect ratio"
+    ),
+    Value = c(
+      format(w, big.mark = ","),
+      format(h, big.mark = ","),
+      ifelse(is.na(d_cm), NA, sprintf("%.2f cm", d_cm)),
+      ifelse(is.na(d_in), NA, sprintf("%.2f in", d_in)),
+      ifelse(is.na(dpi), NA, sprintf("%.0f dpi", dpi)),
+      sprintf("%.2f MP", mp),
+      ar_str
+    ),
+    check.names = FALSE
+  )
+
+   DT::datatable(
+    df,
+    rownames = FALSE,
+    options = list(dom = "t", paging = FALSE, ordering = FALSE),
+    escape = FALSE
+  ) %>%
+  DT::formatStyle(
+    columns = names(df),
+    `font-size` = "14px"
+  )
+})
+```
+
+<br>
+
+::: {.column style="font-size: 18px;"}
+The resolution of the Casio wrist camera is 0.01 Megapixels! <br>
+
+Fortunately, the screen is very small, so the DPI is at 154.
+:::
+
+## Share pictures with your friends! {style="font-size: 26px; text-align:center;"}
+
+![](www/send.gif){fig-align="center"}
+
+------------------------------------------------------------------------
+
+:::::: slide
+::::: {.columns gap="1rem"}
+::: {.column width="30%"}
+![](www/grayscale.png){max-height="60vh" height="60vh" style="object-fit: contain; max-height: 80vh; width: 100%; height: auto;" width="100%"}
+:::
+
+::: {.column width="55%"}
+<br>
+
+-   The watch pictures are great for ML classification exercises <br><br>
+-   The low resolution means less to process <br><br>
+-   And it's grayscale! Only one channel, even less to process!
+:::
+:::::
+::::::
+
+## K-Nearest Neighbors...
+
+... is one of the simplest classification methods and relies on distances to defined points. Examples of distance measures: <br><br>
+
+::: {style="font-size: 0.75em"}
+$$
+\begin{aligned}
+\text{Manhattan:}\quad
+d_{1}(I_{1}, I_{2}) &= \sum_{p}\left|\, I_{1}^{p} - I_{2}^{p} \,\right| \\
+\\
+\text{Euclidean:}\quad
+d_{2}(I_{1}, I_{2}) &= \sqrt{\sum_{p}\left( I_{1}^{p} - I_{2}^{p} \right)^{2}}
+\end{aligned}
+$$
+
+<p style="display:block;">
+
+[@hastie2009elements, chap. 13]
+
+</p>
+:::
+
+------------------------------------------------------------------------
+
+## Squared Euclidean distance in R
+
+``` r
+sq_euclidean <- function(A, B) {
+  n <- nrow(A)                        # number of rows data
+  k <- nrow(B)                        # number of centroids
+  d <- ncol(A)                        # number of variables
+  D2 <- matrix(0, nrow = n, ncol = k) # initialize matrix for squared distances
+
+  for (i in 1:n) {                    # loop over all rows in the data
+    for (j in 1:k) {                  # loop over all centroids
+      s <- 0                          # initialize sum of squared differences
+      for (p in 1:d) {                # loop over each variable
+        diff <- A[i, p] - B[j, p]     # compute differences between points and centers
+        s <- s + diff * diff          # add squared difference
+      }
+      D2[i, j] <- s                   # store squared difference in matrix
+    }}
+  D2}
+```
+
+```{r}
+#| label: setup-data
+#| cache: true
+#| include: false
+
+library(datasets)
+data(iris)
+
+iris_subset <- subset(iris, Species != "setosa")
+```
+
+## References

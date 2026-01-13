@@ -1,0 +1,71 @@
+---
+format: 
+  revealjs:
+    theme: simple
+    logo: logo2.png
+    css: styles.css
+---
+
+# title slide with at least my name {style="font-size:75%;"}
+
+<br>
+
+Hi, I am Leo
+
+::::: columns
+::: {.column width="50%"}
+<br><br><br>
+
+I don't have an ORCID but here is my LinkedIn:
+:::
+
+::: {.column width="50%"}
+![](IMG_LI.png){fig-align="right" width="400"}
+:::
+:::::
+
+## General exposure equation {style="font-size:75%;"}
+
+<br>
+
+::::: columns
+::: column
+$$
+\frac{N^2}{t} = \frac{L \cdot S}{K}
+$$
+
+<br>
+
+-   N = f-number (aperture)\
+-   t = shutter speed\
+-   L = scene luminance (cd/m²)\
+-   S = ISO sensitivity\
+-   K = calibration constant
+:::
+
+::: column
+![](triangle.jpg){.fragment fig-align="left"}
+:::
+:::::
+
+## Something you don't know about me {style="font-size:75%;"}
+
+<br>
+
+::: fragment
+In sixth grade, I participated in the Youth Researchers Club (Jugend forscht).
+:::
+
+:::::: columns
+::: column
+![](2209.jpg){.fragment fig-align="left"}
+:::
+
+:::: column
+<br><br>
+
+::: fragment
+Our project involved letting clementines rot to see which ones would have preservatives.
+:::
+::::
+::::::

@@ -1,0 +1,13 @@
+.reveal h1 {
+  text-decoration: underline;
+}
+
+/* shrink DT body cells */
+.reveal table.dataTable tbody td {
+  font-size: 10px;
+}
+
+/* shrink DT headers */
+.reveal table.dataTable thead th {
+  font-size: 10px;
+}
