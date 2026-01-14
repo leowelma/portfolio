@@ -1,0 +1,72 @@
+---
+title: "odd_R"
+author: "LW"
+date: "2026-01-14"
+output: html_document
+---
+## 6.3 Some R-code
+In order to demonstrate the creation of an R-package, we will identify some odd behaviour by R:
+```{r}
+c(0.5, 1.5, 2.5, 3.5) |> round()
+```
+
+We can see that R rounds - by default - the number 1.5 to integer 2 and the number 2.5 also to integer 2. The reason for this behaviour is the IEC 60559 standard where a 5 is expected to be rounded to the even digit.
+
+If we’d like to round up to the next integer, we can easily define the following function:
+```{r}
+rounder <- function(x){
+  diff <- x - floor(x)
+  out <- ceiling(x)
+  out[diff < .5] <- floor(x)[diff < .5]
+  return(out)
+}
+```
+
+where the vector c(0.5, 1.5, 2.5, 3.5) is rounded up to the next integer
+```{r}
+c(0.5, 1.5, 2.5, 3.5) |> rounder()
+```
+
+and where the vector c(0.49, 1.49, 2.49, 3.49) is rounded down to the previous integer
+```{r}
+c(0.49, 1.49, 2.49, 3.49) |> rounder()
+```
+
+## 6.4 Create R-package roundR
+### 6.4.1 Steps in creating an R-package
+
+We need the following packages to help us with building, testing and maintaining our package:
+```{r}
+library(devtools) # development tools
+library(usethis)  # automated package and project setup
+library(testthat) # unit testing
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
