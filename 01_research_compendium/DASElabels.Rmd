@@ -1,0 +1,43 @@
+---
+title: "DASE_label"
+author: "LW"
+date: "2025-11-25"
+output: html_document
+---
+
+```{r}
+library(lme4)
+
+toy_df$participant <- factor(toy_df$participant)
+toy_df$item        <- factor(toy_df$item)
+toy_df$color       <- factor(toy_df$color,  levels = c("absent", "present"))
+toy_df$format      <- factor(toy_df$format, levels = c("per100", "perServing"))
+
+fit <- glmer(
+  correct ~ color * format + (1 | participant) + (1 | item),
+  data = toy_df,
+  family = binomial)
+
+summary(fit)
+```
+
+```{r}
+library(lme4)
+library(sjPlot)
+
+fit <- glmer(
+  correct ~ color * format + (1 | participant) + (1 | item),
+  data = toy_df,
+  family = binomial)
+
+tab_model(
+  fit,
+  show.re.var = TRUE,
+  show.icc   = FALSE,
+  show.aic   = TRUE,
+  transform = "exp",
+  pred.labels = c("(Intercept)", "Label present", "Per serving", "Label × serving"),
+  dv.labels = "Correct sugar estimate (0/1)",
+  file = "glmer_table.html")
+```
+
