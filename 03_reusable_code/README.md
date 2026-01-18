@@ -9,6 +9,8 @@ See course manual for requirements.
 
 ## k-means shiny app to visualize different k values on the iris dataset
 
+https://leowelma.shinyapps.io/kmeans-app/
+
 ### functions
 
 - loads the iris dataset (https://www.kaggle.com/datasets/uciml/iris)
