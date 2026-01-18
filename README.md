@@ -7,4 +7,5 @@ Use this template to create your own repository, fill the contents of the repo w
 
 ## DOI of the repository
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18270034.svg)](https://doi.org/10.5281/zenodo.18270034)
+DOI: [10.5281/zenodo.18270034](https://doi.org/10.5281/zenodo.18270034)
+
